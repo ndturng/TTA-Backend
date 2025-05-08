@@ -1,0 +1,32 @@
+{
+    "name": "Django Backend",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "backend",
+
+    "workspaceFolder": "/workspace",
+
+    "runServices": [ "db" ],          
+    "forwardPorts": [8000],
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",   // updated
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "python.formatting.provider": "black"
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.pylint",
+                "GitHub.copilot"
+                // 'black-formatter' & 'isort' are optional – handled via the Python extension if the tools are installed in your env
+            ]
+        }
+    },
+
+    // Wait for database, then run migrations. Saves time vs. chown‑ing.
+    "postCreateCommand": "bash -c 'until pg_isready -h db -p 5432 -U pks; do sleep 1; done'",
+    "overrideCommand": false,
+
+    "remoteUser": "vscode"
+}
