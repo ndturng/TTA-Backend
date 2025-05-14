@@ -1,5 +1,7 @@
 import uuid
 from django.db import models
+from django.core.exceptions import ValidationError
+from listings.utils import product_media_path, generate_product_id
 
 
 class DevelopmentProject(models.Model):
@@ -27,7 +29,8 @@ class DevelopmentProject(models.Model):
 
 
 class RealEstateProduct(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # ID format: {type_prefix}-{sequential_number}, e.g., T-001, V-001, A-001, L-001
+    id = models.CharField(primary_key=True, max_length=10, editable=False)
     title = models.CharField(max_length=120)
     description = models.TextField()
     area = models.DecimalField(max_digits=8, decimal_places=2)  # m²
@@ -47,6 +50,16 @@ class RealEstateProduct(models.Model):
         DevelopmentProject, on_delete=models.SET_NULL, null=True, blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def generate_id(self):
+        """Generate a custom ID based on product type."""
+        return generate_product_id(self)
+
+    def save(self, *args, **kwargs):
+        # Generate ID if this is a new product
+        if not self.id:
+            self.id = self.generate_id()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -94,3 +107,53 @@ class LandLotDetails(models.Model):
         choices=[("residential", "Residential"), ("commercial", "Commercial")],
     )
     road_frontage = models.DecimalField(max_digits=6, decimal_places=2)  # mét
+
+
+# --- media tables ---------------------------------------------------------
+class ProductMedia(models.Model):
+    IMAGE = "image"
+    VIDEO = "video"
+
+    MEDIA_TYPE_CHOICES = [
+        (IMAGE, "Image"),
+        (VIDEO, "Video"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product = models.ForeignKey(
+        RealEstateProduct,
+        on_delete=models.CASCADE,
+        related_name="media",
+    )
+    media_type = models.CharField(max_length=5, choices=MEDIA_TYPE_CHOICES)
+    file = models.FileField(upload_to=product_media_path)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    order = models.PositiveSmallIntegerField(
+        default=0)  # optional, for slideshow order
+
+    class Meta:
+        ordering = ["order", "uploaded_at"]
+
+    def clean(self):
+        """Enforce max‑images / max‑videos rule."""
+        if not hasattr(self, 'product') or not self.product or not self.product.id:
+            return  # Skip validation if product is not set or not saved yet
+
+        imgs = ProductMedia.objects.filter(
+            product=self.product, media_type=self.IMAGE
+        ).exclude(pk=self.pk)
+        vids = ProductMedia.objects.filter(
+            product=self.product, media_type=self.VIDEO
+        ).exclude(pk=self.pk)
+
+        if self.media_type == self.IMAGE and imgs.count() >= 10:
+            raise ValidationError("A product can have at most 10 images.")
+        if self.media_type == self.VIDEO and vids.count() >= 3:
+            raise ValidationError("A product can have at most 3 videos.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()      # triggers clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.media_type.capitalize()} ({self.order}) for {self.product}"
