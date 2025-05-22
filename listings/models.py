@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
 from listings.utils import product_media_path, generate_product_id
 
 
@@ -157,3 +158,11 @@ class ProductMedia(models.Model):
 
     def __str__(self):
         return f"{self.media_type.capitalize()} ({self.order}) for {self.product}"
+
+
+@receiver(models.signals.post_delete, sender=ProductMedia)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """Delete file from filesystem when corresponding `ProductMedia` object is deleted."""
+    if instance.file and instance.file.storage.exists(instance.file.name):
+        instance.file.delete(save=False)
+        
