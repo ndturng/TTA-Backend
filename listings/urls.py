@@ -35,4 +35,5 @@ urlpatterns = [
     # Utility endpoints
     path('property-types/', views.property_types_view, name='property-types'),
     path('search/', views.search_properties_view, name='search-properties'),
+    path('similar/<str:product_id>/', views.similar_products, name='similar-products'),
 ]

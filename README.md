@@ -247,6 +247,33 @@ GET /api/search/?q=modern apartment
 }
 ```
 
+### Get Similar Properties
+**GET** `/api/similar/{property_id}/`
+
+**Parameters:**
+- `property_id` (string): The unique identifier of the property (e.g., "A-001", "T-001")
+
+**Response:**
+```json
+{
+  "product_id": "T-001",
+  "similar_products": ["T-002", "T-005", "T-010", "T-015", "T-020"],
+  "criteria": {
+    "type": "townhouse",
+    "price_range": "10,990,000,000 - 20,410,000,000 VND",
+    "area_range": "80.0 - 120.0 m²",
+    "for_sale": true
+  }
+}
+```
+
+**Similarity Criteria:**
+- **Same property type** (apartment, townhouse, villa, land)
+- **Price range**: ±30% of the original property price
+- **Area range**: ±20% of the original property area
+- **Same transaction type** (for sale or for rent)
+- **Maximum 5 results** returned in random order
+
 ---
 
 ## 📊 Common Query Patterns
@@ -342,6 +369,11 @@ const searchData = await searchResponse.json();
 // Get specific property
 const propertyResponse = await fetch('http://localhost:8000/api/apartments/A-001/');
 const property = await propertyResponse.json();
+
+// Get similar properties
+const similarResponse = await fetch('http://localhost:8000/api/similar/A-001/');
+const similarData = await similarResponse.json();
+console.log('Similar properties:', similarData.similar_products);
 ```
 
 ### Using Axios
@@ -365,4 +397,7 @@ const apartments = await api.get('apartments/', {
 const searchResults = await api.get('search/', {
   params: { q: 'downtown' }
 });
+
+// Get similar properties
+const similarResults = await api.get('similar/T-001/');
 ```
