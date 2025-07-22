@@ -35,7 +35,7 @@ class RealEstateProduct(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField()
     area = models.DecimalField(max_digits=8, decimal_places=2)  # m²
-    location = models.CharField(max_length=200)
+    location = models.CharField(max_length=200) # Vị trí
     price = models.DecimalField(max_digits=14, decimal_places=2)
     for_sale = models.BooleanField(help_text="True = sale, False = rent")
     type = models.CharField(
@@ -49,7 +49,7 @@ class RealEstateProduct(models.Model):
     )
     project = models.ForeignKey(
         DevelopmentProject, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    ) # Dự án liên kết
     created_at = models.DateTimeField(auto_now_add=True)
 
     def generate_id(self):
