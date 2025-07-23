@@ -269,24 +269,24 @@ def search_properties_view(request):
 def similar_products(request, product_id):
     """Get similar products based on price, type, and area."""
     from decimal import Decimal
-    
+
     try:
         product = RealEstateProduct.objects.get(id=product_id)
     except RealEstateProduct.DoesNotExist:
         return Response(
-            {'detail': 'Product not found'}, 
+            {'detail': 'Product not found'},
             status=status.HTTP_404_NOT_FOUND
         )
-    
+
     # Define similarity criteria - convert to Decimal for proper arithmetic
     price_range = Decimal('0.3')  # 30% price variance
     area_range = Decimal('0.2')   # 20% area variance
-    
+
     min_price = product.price * (Decimal('1') - price_range)
     max_price = product.price * (Decimal('1') + price_range)
     min_area = product.area * (Decimal('1') - area_range)
     max_area = product.area * (Decimal('1') + area_range)
-    
+
     # Find similar products
     similar_queryset = RealEstateProduct.objects.filter(
         type=product.type,  # Same type (apartment, townhouse, etc.)
@@ -298,10 +298,10 @@ def similar_products(request, product_id):
     ).exclude(
         id=product_id  # Exclude the current product
     ).order_by('?')[:5]  # Random order, limit to 5
-    
+
     # Return only product IDs
     similar_ids = list(similar_queryset.values_list('id', flat=True))
-    
+
     return Response({
         'product_id': product_id,
         'similar_products': similar_ids,
