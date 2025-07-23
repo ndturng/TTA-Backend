@@ -173,14 +173,27 @@ GET /api/properties/?project=123e4567-e89b-12d3-a456-426614174000
 **GET** `/api/townhouses/`
 **GET** `/api/townhouses/{townhouse_id}/`
 
-**Additional townhouse details included:**
+**Additional townhouse fields in list view:**
+```json
+{
+  "id": "T-001",
+  "title": "Modern Townhouse",
+  "bedrooms": 4,
+  "bathrooms": 3,
+  "garage": 2,
+  // ... other standard fields
+}
+```
+
+**Additional townhouse details in detail view:**
 ```json
 {
   "townhouse_details": {
     "floors": 3,
     "bedrooms": 4,
     "bathrooms": 3,
-    "living_room": true
+    "living_room": true,
+    "garage": 2
   }
 }
 ```

@@ -1,8 +1,10 @@
 import uuid
-from django.db import models
+
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.dispatch import receiver
-from listings.utils import product_media_path, generate_product_id
+
+from listings.utils import generate_product_id, product_media_path
 
 
 class DevelopmentProject(models.Model):
@@ -35,7 +37,7 @@ class RealEstateProduct(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField()
     area = models.DecimalField(max_digits=8, decimal_places=2)  # m²
-    location = models.CharField(max_length=200) # Vị trí
+    location = models.CharField(max_length=200)  # Vị trí
     price = models.DecimalField(max_digits=14, decimal_places=2)
     for_sale = models.BooleanField(help_text="True = sale, False = rent")
     type = models.CharField(
@@ -49,7 +51,7 @@ class RealEstateProduct(models.Model):
     )
     project = models.ForeignKey(
         DevelopmentProject, on_delete=models.SET_NULL, null=True, blank=True
-    ) # Dự án liên kết
+    )  # Dự án liên kết
     created_at = models.DateTimeField(auto_now_add=True)
 
     def generate_id(self):
@@ -75,6 +77,7 @@ class TownhouseDetails(models.Model):
     bedrooms = models.PositiveSmallIntegerField()
     bathrooms = models.PositiveSmallIntegerField()
     living_room = models.BooleanField()
+    garage = models.PositiveSmallIntegerField(default=0)
 
 
 class VillaDetails(models.Model):
@@ -165,4 +168,3 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     """Delete file from filesystem when corresponding `ProductMedia` object is deleted."""
     if instance.file and instance.file.storage.exists(instance.file.name):
         instance.file.delete(save=False)
-        

@@ -41,7 +41,7 @@ class ProductMediaSerializer(serializers.ModelSerializer):
 class TownhouseDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TownhouseDetails
-        fields = ['floors', 'bedrooms', 'bathrooms', 'living_room']
+        fields = ['floors', 'bedrooms', 'bathrooms', 'living_room', 'garage']
 
 
 class VillaDetailsSerializer(serializers.ModelSerializer):
@@ -157,6 +157,26 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
             images.append(None)
 
         return images
+
+
+class TownhouseListSerializer(RealEstateProductListSerializer):
+    """Enhanced serializer for townhouse list views with additional details."""
+    bedrooms = serializers.SerializerMethodField()
+    bathrooms = serializers.SerializerMethodField()
+    garage = serializers.SerializerMethodField()
+
+    class Meta(RealEstateProductListSerializer.Meta):
+        fields = RealEstateProductListSerializer.Meta.fields + \
+            ['bedrooms', 'bathrooms', 'garage']
+
+    def get_bedrooms(self, obj):
+        return obj.townhouse_details.bedrooms if hasattr(obj, 'townhouse_details') else None
+
+    def get_bathrooms(self, obj):
+        return obj.townhouse_details.bathrooms if hasattr(obj, 'townhouse_details') else None
+
+    def get_garage(self, obj):
+        return obj.townhouse_details.garage if hasattr(obj, 'townhouse_details') else None
 
 
 # Specific serializers for each product type
