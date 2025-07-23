@@ -99,7 +99,7 @@ class RealEstateProductSerializer(serializers.ModelSerializer):
 
     def get_area_formatted(self, obj):
         """Format area with unit."""
-        return f"{obj.area} m²"
+        return f"{obj.area:.0f} m²"
 
     def get_for_sale_display(self, obj):
         """Human readable for_sale field."""
@@ -133,7 +133,7 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
         return f"{millions:,.0f} Triệu"
 
     def get_area_formatted(self, obj):
-        return f"{obj.area} m²"
+        return f"{obj.area:.0f} m²"
 
     def get_for_sale_display(self, obj):
         return "For Sale" if obj.for_sale else "For Rent"
