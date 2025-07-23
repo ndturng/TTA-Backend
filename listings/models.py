@@ -93,6 +93,7 @@ class VillaDetails(models.Model):
     living_room = models.BooleanField()
     garden = models.BooleanField()
     swimming_pool = models.BooleanField()
+    garage = models.PositiveSmallIntegerField(default=0)
 
 
 class ApartmentDetails(models.Model):

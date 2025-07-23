@@ -205,7 +205,19 @@ GET /api/properties/?project=123e4567-e89b-12d3-a456-426614174000
 **GET** `/api/villas/`
 **GET** `/api/villas/{villa_id}/`
 
-**Additional villa details included:**
+**Additional villa fields in list view:**
+```json
+{
+  "id": "V-001",
+  "title": "Luxury Villa",
+  "bedrooms": 5,
+  "bathrooms": 4,
+  "garage": 3,
+  // ... other standard fields
+}
+```
+
+**Additional villa details in detail view:**
 ```json
 {
   "villa_details": {
@@ -214,7 +226,8 @@ GET /api/properties/?project=123e4567-e89b-12d3-a456-426614174000
     "bathrooms": 4,
     "living_room": true,
     "garden": true,
-    "swimming_pool": true
+    "swimming_pool": true,
+    "garage": 3
   }
 }
 ```

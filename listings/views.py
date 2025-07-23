@@ -21,6 +21,7 @@ from .serializers import (
     RealEstateProductSerializer,
     TownhouseListSerializer,
     TownhouseSerializer,
+    VillaListSerializer,
     VillaSerializer,
 )
 
@@ -169,7 +170,7 @@ class TownhouseDetailView(generics.RetrieveAPIView):
 
 class VillaListView(generics.ListAPIView):
     """List all villas."""
-    serializer_class = RealEstateProductListSerializer
+    serializer_class = VillaListSerializer
     filter_backends = [DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['for_sale', 'project']
@@ -178,7 +179,9 @@ class VillaListView(generics.ListAPIView):
     ordering = ['-created_at']
 
     def get_queryset(self):
-        return RealEstateProduct.objects.filter(type='villa').select_related('project').prefetch_related('media')
+        return RealEstateProduct.objects.filter(type='villa').select_related(
+            'project', 'villa_details'
+        ).prefetch_related('media')
 
 
 class VillaDetailView(generics.RetrieveAPIView):
