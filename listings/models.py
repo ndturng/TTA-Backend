@@ -78,6 +78,9 @@ class TownhouseDetails(models.Model):
     bathrooms = models.PositiveSmallIntegerField()
     living_room = models.BooleanField()
     garage = models.PositiveSmallIntegerField(default=0)
+    policy = models.TextField(default="Đang cập nhật")
+    structure = models.TextField(default="Đang cập nhật")
+    interior = models.TextField(default="Đang cập nhật")
 
 
 class VillaDetails(models.Model):

@@ -193,7 +193,10 @@ GET /api/properties/?project=123e4567-e89b-12d3-a456-426614174000
     "bedrooms": 4,
     "bathrooms": 3,
     "living_room": true,
-    "garage": 2
+    "garage": 2,
+    "policy": "Đang cập nhật",
+    "structure": "Đang cập nhật",
+    "interior": "Đang cập nhật"
   }
 }
 ```

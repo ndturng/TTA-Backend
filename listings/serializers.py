@@ -41,7 +41,8 @@ class ProductMediaSerializer(serializers.ModelSerializer):
 class TownhouseDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TownhouseDetails
-        fields = ['floors', 'bedrooms', 'bathrooms', 'living_room', 'garage']
+        fields = ['floors', 'bedrooms', 'bathrooms', 'living_room',
+                  'garage', 'policy', 'structure', 'interior']
 
 
 class VillaDetailsSerializer(serializers.ModelSerializer):
