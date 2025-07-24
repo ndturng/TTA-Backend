@@ -56,7 +56,7 @@ All endpoints return JSON responses with pagination:
   "previous": null,
   "results": [
     {
-      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "id": "P-001",
       "name": "Sunset Gardens",
       "location": "Downtown District",
       "developer": "ABC Development Co.",
@@ -75,7 +75,7 @@ All endpoints return JSON responses with pagination:
 **GET** `/api/projects/{project_id}/`
 
 **Parameters:**
-- `project_id` (UUID): The unique identifier of the project
+- `project_id` (string): The unique identifier of the project (e.g., "P-001", "P-002")
 
 ---
 
@@ -89,7 +89,7 @@ All endpoints return JSON responses with pagination:
 - `for_sale` (boolean): `true` for sale, `false` for rent
 - `min_price` (decimal): Minimum price filter
 - `max_price` (decimal): Maximum price filter
-- `project` (UUID): Filter by development project ID
+- `project` (string): Filter by development project ID
 - `page` (integer): Page number for pagination
 
 **Example Requests:**
@@ -104,7 +104,7 @@ GET /api/properties/?type=apartment&for_sale=true
 GET /api/properties/?min_price=100000&max_price=500000
 
 # Get properties from specific project
-GET /api/properties/?project=123e4567-e89b-12d3-a456-426614174000
+GET /api/properties/?project=P-001
 ```
 
 **Response:**
@@ -124,7 +124,7 @@ GET /api/properties/?project=123e4567-e89b-12d3-a456-426614174000
       "for_sale": true,
       "type": "apartment",
       "project": {
-        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "id": "P-001",
         "name": "Sunset Gardens",
         "location": "Downtown District"
       },
@@ -316,7 +316,7 @@ GET /api/apartments/?for_sale=false&max_price=2000
 GET /api/villas/?for_sale=true
 
 # Get properties from a specific project
-GET /api/properties/?project=123e4567-e89b-12d3-a456-426614174000
+GET /api/properties/?project=P-001
 
 # Search for properties with "garden"
 GET /api/search/?q=garden
@@ -335,7 +335,8 @@ GET /api/properties/?page=2
 
 ## 🗂️ Property ID Format
 
-Properties use a specific ID format based on type:
+Properties and projects use specific ID formats based on type:
+- **Development Projects**: `P-001`, `P-002`, etc.
 - **Apartments**: `A-001`, `A-002`, etc.
 - **Townhouses**: `T-001`, `T-002`, etc.
 - **Villas**: `V-001`, `V-002`, etc.

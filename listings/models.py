@@ -4,11 +4,12 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.dispatch import receiver
 
-from listings.utils import generate_product_id, product_media_path
+from listings.utils import generate_product_id, generate_project_id, product_media_path
 
 
 class DevelopmentProject(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # ID format: P-{sequential_number}, e.g., P-001, P-002
+    id = models.CharField(primary_key=True, max_length=10, editable=False)
     name = models.CharField(max_length=120)
     location = models.CharField(max_length=200)
     developer = models.CharField(max_length=120)
@@ -26,6 +27,16 @@ class DevelopmentProject(models.Model):
     completion_standard = models.CharField(max_length=100)
     management_unit = models.CharField(max_length=120)
     distributor = models.CharField(max_length=120)
+
+    def generate_id(self):
+        """Generate a custom ID for the project."""
+        return generate_project_id()
+
+    def save(self, *args, **kwargs):
+        # Generate ID if this is a new project
+        if not self.id:
+            self.id = self.generate_id()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

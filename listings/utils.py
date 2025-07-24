@@ -73,3 +73,36 @@ def generate_product_id(product_instance):
         new_num = "001"
 
     return f"{prefix}-{new_num}"
+
+
+def generate_project_id():
+    """
+    Generate a custom ID for development projects.
+
+    Returns:
+        str: Generated ID in format P-{number}
+    """
+    # Import here to avoid circular import
+    from listings.models import DevelopmentProject
+
+    # Find the latest project with P- prefix
+    latest_projects = DevelopmentProject.objects.filter(
+        id__startswith="P-"
+    ).order_by('id')
+
+    if latest_projects.exists():
+        # Get the latest ID and increment the number
+        latest_id = latest_projects.last().id
+        # Extract the number part
+        try:
+            latest_num = int(latest_id.split('-')[1])
+            # Increment and zero-pad to 3 digits
+            new_num = str(latest_num + 1).zfill(3)
+        except (ValueError, IndexError):
+            # Fallback in case of parsing error
+            new_num = "001"
+    else:
+        # First project
+        new_num = "001"
+
+    return f"P-{new_num}"

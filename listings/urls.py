@@ -8,7 +8,7 @@ app_name = 'listings'
 urlpatterns = [
     # Development Projects
     path('projects/', views.DevelopmentProjectListView.as_view(), name='project-list'),
-    path('projects/<uuid:pk>/',
+    path('projects/<str:pk>/',
          views.DevelopmentProjectDetailView.as_view(), name='project-detail'),
 
     # All Real Estate Products
