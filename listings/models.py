@@ -24,9 +24,17 @@ class DevelopmentProject(models.Model):
         ],
     )
     delivery_time = models.DateField()
-    completion_standard = models.CharField(max_length=100)
+    completion_standard = models.CharField(max_length=100, default="Đang cập nhật")
     management_unit = models.CharField(max_length=120)
     distributor = models.CharField(max_length=120)
+
+    # Additional fields for listing page
+    area_size = models.DecimalField(
+        max_digits=8, decimal_places=2, default=0.0, help_text="Area in hectares (Ha)")
+    quantity = models.CharField(
+        max_length=50, default="Đang cập nhật", help_text="Number of units (e.g., 231 căn)")
+    policy = models.TextField(default="Đang cập nhật",
+                              help_text="Policy information (e.g., Sổ hồng)")
 
     def generate_id(self):
         """Generate a custom ID for the project."""

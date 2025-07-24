@@ -65,11 +65,21 @@ All endpoints return JSON responses with pagination:
       "delivery_time": "2025-12-31",
       "completion_standard": "Luxury",
       "management_unit": "Property Management Ltd.",
-      "distributor": "Real Estate Agency"
+      "distributor": "Real Estate Agency",
+      "area_size": "3.50",
+      "area_size_formatted": "3.50 Ha",
+      "quantity": "231 căn",
+      "policy": "Sổ hồng"
     }
   ]
 }
 ```
+
+**Field Descriptions:**
+- `area_size` (decimal): Project area in hectares (raw number)
+- `area_size_formatted` (string): Formatted area with unit (e.g., "3.5 Ha")
+- `quantity` (string): Number of units in the project (e.g., "231 căn")
+- `policy` (text): Policy information such as ownership documentation (e.g., "Sổ hồng")
 
 ### Get Project Details
 **GET** `/api/projects/{project_id}/`

@@ -12,13 +12,24 @@ from .models import (
 
 
 class DevelopmentProjectSerializer(serializers.ModelSerializer):
+    area_size_formatted = serializers.SerializerMethodField()
+
     class Meta:
         model = DevelopmentProject
         fields = [
             'id', 'name', 'location', 'developer', 'general_contractor',
             'project_type', 'delivery_time', 'completion_standard',
-            'management_unit', 'distributor'
+            'management_unit', 'distributor', 'area_size', 'area_size_formatted',
+            'quantity', 'policy'
         ]
+
+    def get_area_size_formatted(self, obj):
+        """Format area size in hectares (Ha)."""
+        if obj.area_size is not None:
+            # Format the decimal to remove unnecessary zeros
+            formatted_area = f"{obj.area_size:g}"
+            return f"{formatted_area} Ha"
+        return None
 
 
 class ProductMediaSerializer(serializers.ModelSerializer):
