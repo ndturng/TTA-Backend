@@ -70,9 +70,19 @@ class ApartmentDetailsSerializer(serializers.ModelSerializer):
 
 
 class LandLotDetailsSerializer(serializers.ModelSerializer):
+    road_frontage_formatted = serializers.SerializerMethodField()
+
     class Meta:
         model = LandLotDetails
-        fields = ['land_type', 'road_frontage']
+        fields = ['land_type', 'road_frontage', 'road_frontage_formatted']
+
+    def get_road_frontage_formatted(self, obj):
+        """Format road frontage in meters (m)."""
+        if obj.road_frontage is not None:
+            # Convert to float to remove trailing zeros, then format
+            formatted_frontage = f"{float(obj.road_frontage):g}"
+            return f"{formatted_frontage} m"
+        return None
 
 
 class RealEstateProductSerializer(serializers.ModelSerializer):

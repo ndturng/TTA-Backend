@@ -251,7 +251,8 @@ GET /api/properties/?project=P-001
 {
   "land_details": {
     "land_type": "residential",
-    "road_frontage": "25.50"
+    "road_frontage": "25.50",
+    "road_frontage_formatted": "25.5 m"
   }
 }
 ```
