@@ -4,6 +4,7 @@
 *.jpeg
 *.gif
 *.mp4
+*.HEIC
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
