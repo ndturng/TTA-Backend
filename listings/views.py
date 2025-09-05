@@ -19,6 +19,7 @@ from .serializers import (
     LandSerializer,
     RealEstateProductListSerializer,
     RealEstateProductSerializer,
+    SimilarProductSerializer,
     TownhouseListSerializer,
     TownhouseSerializer,
     VillaListSerializer,
@@ -273,7 +274,7 @@ def search_properties_view(request):
 
 @api_view(['GET'])
 def similar_products(request, product_id):
-    """Get similar products based on price, type, and area."""
+    """Get similar products with detailed information based on price, type, and area."""
     from decimal import Decimal
 
     try:
@@ -293,7 +294,7 @@ def similar_products(request, product_id):
     min_area = product.area * (Decimal('1') - area_range)
     max_area = product.area * (Decimal('1') + area_range)
 
-    # Find similar products
+    # Find similar products with detailed information
     similar_queryset = RealEstateProduct.objects.filter(
         type=product.type,  # Same type (apartment, townhouse, etc.)
         price__gte=min_price,
@@ -303,14 +304,17 @@ def similar_products(request, product_id):
         for_sale=product.for_sale  # Same transaction type (sale/rent)
     ).exclude(
         id=product_id  # Exclude the current product
-    ).order_by('?')[:5]  # Random order, limit to 5
+    ).prefetch_related('media').order_by('?')[:5]  # Random order, limit to 5
 
-    # Return only product IDs
-    similar_ids = list(similar_queryset.values_list('id', flat=True))
+    # Serialize the similar products with detailed information
+    serializer = SimilarProductSerializer(
+        similar_queryset, many=True, context={'request': request}
+    )
 
     return Response({
         'product_id': product_id,
-        'similar_products': similar_ids,
+        'similar_products': serializer.data,
+        'count': len(serializer.data),
         'criteria': {
             'type': product.type,
             'price_range': f"{min_price:,.0f} - {max_price:,.0f} VND",

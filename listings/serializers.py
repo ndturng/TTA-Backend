@@ -274,3 +274,40 @@ class LandSerializer(RealEstateProductSerializer):
         data.pop('townhouse_details', None)
         data.pop('villa_details', None)
         return data
+
+
+class SimilarProductSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for similar products."""
+    price_formatted = serializers.SerializerMethodField()
+    area_formatted = serializers.SerializerMethodField()
+    main_image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RealEstateProduct
+        fields = [
+            'id', 'title', 'price', 'price_formatted',
+            'area', 'area_formatted', 'location', 'main_image'
+        ]
+
+    def get_price_formatted(self, obj):
+        """Format price in Vietnamese billions (Tỷ)."""
+        billions = obj.price / 1_000_000_000
+        if billions >= 1:
+            return f"{billions:,.1f} Tỷ"
+        millions = obj.price / 1_000_000
+        return f"{millions:,.0f} Triệu"
+
+    def get_area_formatted(self, obj):
+        """Format area with unit."""
+        return f"{obj.area:.0f} m²"
+
+    def get_main_image(self, obj):
+        """Get the first image of the product."""
+        first_image = obj.media.filter(
+            media_type=ProductMedia.IMAGE).order_by('order').first()
+        if first_image and first_image.file:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(first_image.file.url)
+            return first_image.file.url
+        return None
