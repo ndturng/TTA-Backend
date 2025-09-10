@@ -1,14 +1,16 @@
 from django.contrib import admin
 from django.utils.html import format_html
+
 from .models import (
+    ApartmentDetails,
     DevelopmentProject,
+    LandLotDetails,
+    ProductMedia,
     RealEstateProduct,
     TownhouseDetails,
     VillaDetails,
-    ApartmentDetails,
-    LandLotDetails,
-    ProductMedia
 )
+
 
 class ProductMediaInline(admin.TabularInline):
     model = ProductMedia
@@ -21,8 +23,17 @@ class ProductMediaInline(admin.TabularInline):
             return format_html('<img src="{}" style="height:60px;" />', obj.file.url)
         return "-"
 
+
 class RealEstateProductAdmin(admin.ModelAdmin):
     inlines = [ProductMediaInline]
+    list_display = ['id', 'title', 'type', 'price', 'location', 'for_sale']
+    list_filter = ['type', 'for_sale', 'created_at']
+    search_fields = ['title', 'description', 'location']
+    fields = [
+        'title', 'description', 'type', 'area', 'location', 'price', 'for_sale',
+        'project', 'youtube_url', 'tiktok_url'
+    ]
+
 
 admin.site.register(DevelopmentProject)
 admin.site.register(RealEstateProduct)
@@ -32,5 +43,5 @@ admin.site.register(ApartmentDetails)
 admin.site.register(LandLotDetails)
 admin.site.register(ProductMedia)
 
-admin.site.unregister(RealEstateProduct) 
+admin.site.unregister(RealEstateProduct)
 admin.site.register(RealEstateProduct, RealEstateProductAdmin)

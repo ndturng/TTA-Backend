@@ -24,7 +24,8 @@ class DevelopmentProject(models.Model):
         ],
     )
     delivery_time = models.DateField()
-    completion_standard = models.CharField(max_length=100, default="Đang cập nhật")
+    completion_standard = models.CharField(
+        max_length=100, default="Đang cập nhật")
     management_unit = models.CharField(max_length=120)
     distributor = models.CharField(max_length=120)
 
@@ -72,6 +73,12 @@ class RealEstateProduct(models.Model):
         DevelopmentProject, on_delete=models.SET_NULL, null=True, blank=True
     )  # Dự án liên kết
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # Social media URLs
+    youtube_url = models.URLField(max_length=500, blank=True, null=True,
+                                  help_text="YouTube video URL for this product")
+    tiktok_url = models.URLField(max_length=500, blank=True, null=True,
+                                 help_text="TikTok video URL for this product")
 
     def generate_id(self):
         """Generate a custom ID based on product type."""

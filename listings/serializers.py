@@ -107,7 +107,7 @@ class RealEstateProductSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'description', 'area', 'area_formatted', 'location',
             'price', 'price_formatted', 'for_sale', 'for_sale_display', 'type',
-            'type_display', 'created_at', 'project', 'media',
+            'type_display', 'created_at', 'project', 'media', 'youtube_url', 'tiktok_url',
             'townhouse_details', 'villa_details', 'apartment_details', 'land_details'
         ]
 
