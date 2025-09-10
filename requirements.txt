@@ -5,3 +5,7 @@ djangorestframework
 django-cors-headers
 django-filter
 # pillow==10.0.0
+gunicorn
+django-storages[boto3]
+python-decouple
+dj_database_url
