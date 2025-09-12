@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+
+import dj_database_url
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -92,7 +94,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 #     }
 # }
 
-import dj_database_url
+
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL'),
@@ -199,12 +201,16 @@ REST_FRAMEWORK = {
     ],
 }
 
+CORS_ALLOW_ALL_ORIGINS = False
+
 # CORS settings (for development)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React default
     "http://127.0.0.1:3000",
     "http://localhost:8080",  # Vue default
     "http://127.0.0.1:8080",
+    # Production frontend (removed trailing slash)
+    "https://ttaland.netlify.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
