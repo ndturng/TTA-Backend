@@ -144,8 +144,7 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'area', 'area_formatted', 'location',
             'price', 'price_formatted', 'for_sale', 'for_sale_display',
-            'type', 'type_display', 'created_at', 'project_name', 'main_images',
-            'latitude', 'longitude'
+            'type', 'type_display', 'created_at', 'project_name', 'main_images'
         ]
 
     def get_price_formatted(self, obj):
