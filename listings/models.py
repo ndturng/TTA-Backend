@@ -80,6 +80,12 @@ class RealEstateProduct(models.Model):
     tiktok_url = models.URLField(max_length=500, blank=True, null=True,
                                  help_text="TikTok video URL for this product")
 
+    # GPS Coordinates
+    latitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, null=True,
+                                   help_text="Latitude coordinate (e.g., 10.7756590)")
+    longitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, null=True,
+                                    help_text="Longitude coordinate (e.g., 106.7019090)")
+
     def generate_id(self):
         """Generate a custom ID based on product type."""
         return generate_product_id(self)

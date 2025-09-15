@@ -26,12 +26,13 @@ class ProductMediaInline(admin.TabularInline):
 
 class RealEstateProductAdmin(admin.ModelAdmin):
     inlines = [ProductMediaInline]
-    list_display = ['id', 'title', 'type', 'price', 'location', 'for_sale']
+    list_display = ['id', 'title', 'type', 'price',
+                    'location', 'for_sale', 'latitude', 'longitude']
     list_filter = ['type', 'for_sale', 'created_at']
     search_fields = ['title', 'description', 'location']
     fields = [
         'title', 'description', 'type', 'area', 'location', 'price', 'for_sale',
-        'project', 'youtube_url', 'tiktok_url'
+        'project', 'youtube_url', 'tiktok_url', 'latitude', 'longitude'
     ]
 
 
