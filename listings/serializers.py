@@ -222,6 +222,26 @@ class VillaListSerializer(RealEstateProductListSerializer):
         return obj.villa_details.garage if hasattr(obj, 'villa_details') else None
 
 
+class ApartmentListSerializer(RealEstateProductListSerializer):
+    """Enhanced serializer for apartment list views with additional details."""
+    bedrooms = serializers.SerializerMethodField()
+    bathrooms = serializers.SerializerMethodField()
+    floor_number = serializers.SerializerMethodField()
+
+    class Meta(RealEstateProductListSerializer.Meta):
+        fields = RealEstateProductListSerializer.Meta.fields + \
+            ['bedrooms', 'bathrooms', 'floor_number']
+
+    def get_bedrooms(self, obj):
+        return obj.apartment_details.bedrooms if hasattr(obj, 'apartment_details') else None
+
+    def get_bathrooms(self, obj):
+        return obj.apartment_details.bathrooms if hasattr(obj, 'apartment_details') else None
+
+    def get_floor_number(self, obj):
+        return obj.apartment_details.floor_number if hasattr(obj, 'apartment_details') else None
+
+
 # Specific serializers for each product type
 class ApartmentSerializer(RealEstateProductSerializer):
     """Serializer specifically for apartments."""

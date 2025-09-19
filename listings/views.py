@@ -14,6 +14,7 @@ from .models import (
     VillaDetails,
 )
 from .serializers import (
+    ApartmentListSerializer,
     ApartmentSerializer,
     DevelopmentProjectSerializer,
     LandSerializer,
@@ -93,7 +94,7 @@ class RealEstateProductDetailView(generics.RetrieveAPIView):
 # Type-specific API Views
 class ApartmentListView(generics.ListAPIView):
     """List all apartments."""
-    serializer_class = RealEstateProductListSerializer
+    serializer_class = ApartmentListSerializer
     filter_backends = [DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['for_sale', 'project']
@@ -103,7 +104,7 @@ class ApartmentListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = RealEstateProduct.objects.filter(
-            type='apartment').select_related('project').prefetch_related('media')
+            type='apartment').select_related('project', 'apartment_details').prefetch_related('media')
 
         # Custom filtering for apartments
         min_price = self.request.query_params.get('min_price')
