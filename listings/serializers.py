@@ -302,12 +302,13 @@ class SimilarProductSerializer(serializers.ModelSerializer):
     price_formatted = serializers.SerializerMethodField()
     area_formatted = serializers.SerializerMethodField()
     main_image = serializers.SerializerMethodField()
+    num_images = serializers.SerializerMethodField()
 
     class Meta:
         model = RealEstateProduct
         fields = [
             'id', 'title', 'price', 'price_formatted',
-            'area', 'area_formatted', 'location', 'main_image'
+            'area', 'area_formatted', 'location', 'main_image', 'num_images', 'created_at'
         ]
 
     def get_price_formatted(self, obj):
@@ -332,3 +333,7 @@ class SimilarProductSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(first_image.file.url)
             return first_image.file.url
         return None
+
+    def get_num_images(self, obj):
+        """Get the total number of images for the product."""
+        return obj.media.filter(media_type=ProductMedia.IMAGE).count()
