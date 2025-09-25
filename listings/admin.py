@@ -29,9 +29,9 @@ class RealEstateProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'type', 'price',
                     'location', 'for_sale', 'latitude', 'longitude']
     list_filter = ['type', 'for_sale', 'created_at']
-    search_fields = ['title', 'description', 'location']
+    search_fields = ['title', 'description', 'mini_description', 'location']
     fields = [
-        'title', 'description', 'type', 'area', 'location', 'price', 'for_sale',
+        'title', 'description', 'mini_description', 'type', 'area', 'location', 'price', 'for_sale',
         'project', 'youtube_url', 'tiktok_url', 'latitude', 'longitude'
     ]
 

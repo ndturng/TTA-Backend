@@ -56,6 +56,8 @@ class RealEstateProduct(models.Model):
     id = models.CharField(primary_key=True, max_length=10, editable=False)
     title = models.CharField(max_length=120)
     description = models.TextField()
+    mini_description = models.CharField(max_length=200, blank=True, null=True,
+                                        help_text="Short description for list views. If empty, will use truncated description.")
     area = models.DecimalField(max_digits=8, decimal_places=2)  # m²
     location = models.CharField(max_length=200)  # Vị trí
     price = models.DecimalField(max_digits=14, decimal_places=2)

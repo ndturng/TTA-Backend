@@ -138,13 +138,14 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
         source='get_type_display', read_only=True)
     for_sale_display = serializers.SerializerMethodField()
     main_images = serializers.SerializerMethodField()
+    mini_description = serializers.SerializerMethodField()
 
     class Meta:
         model = RealEstateProduct
         fields = [
             'id', 'title', 'area', 'area_formatted', 'location',
             'price', 'price_formatted', 'for_sale', 'for_sale_display',
-            'type', 'type_display', 'created_at', 'project_name', 'main_images'
+            'type', 'type_display', 'created_at', 'project_name', 'main_images', 'mini_description'
         ]
 
     def get_price_formatted(self, obj):
@@ -180,6 +181,20 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
             images.append(None)
 
         return images
+
+    def get_mini_description(self, obj):
+        """Get mini description. If mini_description field is empty, use truncated description."""
+        # If mini_description is explicitly set, use it
+        if obj.mini_description:
+            return obj.mini_description
+
+        # Otherwise, fallback to truncated main description
+        if obj.description:
+            # Truncate to 300 characters and add ellipsis if longer
+            if len(obj.description) > 300:
+                return obj.description[:297] + "..."
+            return obj.description
+        return None
 
 
 class TownhouseListSerializer(RealEstateProductListSerializer):
