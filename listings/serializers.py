@@ -138,14 +138,14 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
         source='get_type_display', read_only=True)
     for_sale_display = serializers.SerializerMethodField()
     main_images = serializers.SerializerMethodField()
-    mini_description = serializers.SerializerMethodField()
+    number_of_images = serializers.SerializerMethodField()
 
     class Meta:
         model = RealEstateProduct
         fields = [
-            'id', 'title', 'area', 'area_formatted', 'location',
+            'id', 'title', 'description', 'area', 'area_formatted', 'location',
             'price', 'price_formatted', 'for_sale', 'for_sale_display',
-            'type', 'type_display', 'created_at', 'project_name', 'main_images', 'mini_description'
+            'type', 'type_display', 'created_at', 'project_name', 'main_images', 'number_of_images'
         ]
 
     def get_price_formatted(self, obj):
@@ -163,9 +163,9 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
         return "For Sale" if obj.for_sale else "For Rent"
 
     def get_main_images(self, obj):
-        """Get up to 3 main images for the product."""
+        """Get up to 4 main images for the product."""
         main_media = obj.media.filter(
-            media_type=ProductMedia.IMAGE).order_by('order')[:3]
+            media_type=ProductMedia.IMAGE).order_by('order')[:4]
         images = []
         request = self.context.get('request')
 
@@ -176,25 +176,15 @@ class RealEstateProductListSerializer(serializers.ModelSerializer):
                 else:
                     images.append(media.file.url)
 
-        # Pad with None if we have fewer than 3 images
-        while len(images) < 3:
+        # Pad with None if we have fewer than 4 images
+        while len(images) < 4:
             images.append(None)
 
         return images
 
-    def get_mini_description(self, obj):
-        """Get mini description. If mini_description field is empty, use truncated description."""
-        # If mini_description is explicitly set, use it
-        if obj.mini_description:
-            return obj.mini_description
-
-        # Otherwise, fallback to truncated main description
-        if obj.description:
-            # Truncate to 300 characters and add ellipsis if longer
-            if len(obj.description) > 300:
-                return obj.description[:297] + "..."
-            return obj.description
-        return None
+    def get_number_of_images(self, obj):
+        """Get the total number of images for the product."""
+        return obj.media.filter(media_type=ProductMedia.IMAGE).count()
 
 
 class TownhouseListSerializer(RealEstateProductListSerializer):
