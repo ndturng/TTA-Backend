@@ -9,3 +9,5 @@ gunicorn
 python-decouple
 dj_database_url
 whitenoise
+
+django-storages[boto3]
